@@ -23,9 +23,9 @@
     <script>
       function calculate() {
         var cost_price = document.getElementById("cost_price").value;
-        var profit_margin = document.getElementById("profit_margin").value / 100;
-        var shipping_handling = document.getElementById("shipping_handling").value / 100;
-        var sales_tax = document.getElementById("sales_tax").value / 100;
+        var profit_margin = document.getElementById("profit_margin").value;
+        var shipping_handling = document.getElementById("shipping_handling").value;
+        var sales_tax = document.getElementById("sales_tax").value;
 
         var selling_price = (cost_price + (cost_price * profit_margin)) * (1 + shipping_handling + sales_tax);
         var discounted_price = selling_price * 0.9;
