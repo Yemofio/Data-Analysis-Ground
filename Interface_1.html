@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Price Calculator</title>
+  </head>
+  <body>
+    <h1>Price Calculator</h1>
+    <form>
+      <label for="cost_price">Cost Price:</label>
+      <input type="number" id="cost_price" name="cost_price"><br><br>
+      <label for="profit_margin">Profit Margin:</label>
+      <input type="number" id="profit_margin" name="profit_margin"><br><br>
+      <label for="shipping_handling">Shipping & Handling:</label>
+      <input type="number" id="shipping_handling" name="shipping_handling"><br><br>
+      <label for="sales_tax">Sales Tax (VAT):</label>
+      <input type="number" id="sales_tax" name="sales_tax"><br><br>
+      <button type="button" onclick="calculate()">Calculate</button><br><br>
+      <label for="selling_price">Selling Price:</label>
+      <input type="text" id="selling_price" name="selling_price" readonly><br><br>
+      <label for="discounted_price">Discounted Price (10% off):</label>
+      <input type="text" id="discounted_price" name="discounted_price" readonly>
+    </form>
+    <script>
+      function calculate() {
+        var cost_price = document.getElementById("cost_price").value;
+        var profit_margin = document.getElementById("profit_margin").value / 100;
+        var shipping_handling = document.getElementById("shipping_handling").value / 100;
+        var sales_tax = document.getElementById("sales_tax").value / 100;
+
+        var selling_price = (cost_price + (cost_price * profit_margin)) * (1 + shipping_handling + sales_tax);
+        var discounted_price = selling_price * 0.9;
+
+        document.getElementById("selling_price").value = "$" + selling_price.toFixed(2);
+        document.getElementById("discounted_price").value = "$" + discounted_price.toFixed(2);
+      }
+    </script>
+  </body>
+</html>
