@@ -4,131 +4,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shadowy and Classy Web Page</title>
+    <title>Funky and Colorful Web Page</title>
     <style>
         body {
-            background-color: #1e1e1e;
+            background: linear-gradient(to right, #ff00cc, #3333ff);
+            font-family: 'Arial', sans-serif;
             color: #ffffff;
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-
-        header {
-            background-color: #111111;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         h1 {
-            font-size: 32px;
-            margin: 0;
+            font-size: 48px;
+            margin-bottom: 40px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        main {
-            padding: 40px;
+        section {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
         }
 
         h2 {
             font-size: 24px;
             margin-bottom: 20px;
+            text-align: center;
+            color: #333333;
         }
 
         .chart-container {
-            width: 100%;
             height: 400px;
-            background-color: #252525;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-        }
-
-        .chart-title {
-            font-size: 20px;
-            margin: 10px 0;
-        }
-
-        .chart-section {
             margin-bottom: 40px;
         }
 
-        .chart-section label {
-            display: block;
-            font-size: 16px;
-            margin-bottom: 10px;
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333333;
         }
 
-        .chart-section input[type="checkbox"] {
-            margin-right: 10px;
+        .file-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .file-upload {
+        .file-input input[type="file"] {
             margin-top: 20px;
+            border: none;
         }
 
-        .file-upload label {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #111111;
+        .file-input label {
+            background-color: #ff00cc;
             color: #ffffff;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-        }
-
-        .file-upload input[type="file"] {
-            display: none;
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <h1>Shadowy and Classy Web Page</h1>
-    </header>
-    <main>
-        <section class="chart-section">
-            <h2>Data Analysis</h2>
-            <div class="chart-container">
-                <h3 class="chart-title">Chart Title</h3>
-            </div>
-        </section>
-        <section class="chart-section">
-            <h2>Select Data Presentations</h2>
-            <label>
-                <input type="checkbox" name="chart-type" value="line"> Line Chart
-            </label>
-            <label>
-                <input type="checkbox" name="chart-type" value="bar"> Bar Chart
-            </label>
-            <label>
-                <input type="checkbox" name="chart-type" value="pie"> Pie Chart
-            </label>
-        </section>
-        <section class="file-upload">
-            <h2>Upload File</h2>
-            <label for="file-input">Choose a CSV/Excel file</label>
-            <input id="file-input" type="file" accept=".csv, .xlsx, .xls">
-        </section>
-    </main>
+    <h1>Funky and Colorful Web Page</h1>
+    <section>
+        <h2>Data Analysis</h2>
+        <div class="chart-container">
+            <div id="line-chart-container" class="chart-title"></div>
+            <canvas id="line-chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div id="bar-chart-container" class="chart-title"></div>
+            <canvas id="bar-chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div id="pie-chart-container" class="chart-title"></div>
+            <canvas id="pie-chart"></canvas>
+        </div>
+        <div class="file-input">
+            <label for="file">Upload CSV/Excel File</label>
+            <input type="file" id="file" accept=".csv, .xlsx, .xls" onchange="handleFileUpload(this.files)">
+        </div>
+    </section>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Assuming you have included the Chart.js library
 
-        // Function to analyze the file and generate charts
+        // Function to read and analyze the CSV/Excel file
         function analyzeFile(file, chartTypes) {
-            // Implement the file analysis and chart generation logic here
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var contents = e.target.result;
+
+                // Pass the file contents to the Python script for analysis
+                fetch('analysis.php', {
+                    method: 'POST',
+                    body: contents
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (chartTypes.includes("line")) {
+                            // Create a line chart
+                            const lineChartCtx = document.getElementById("line-chart").getContext("2d");
+                            new Chart(lineChartCtx, {
+                                type: "line",
+                                data: result.lineData, // Chart data from PHP
+                                options: {}
+                            });
+                            document.getElementById("line-chart-container").innerText = result.lineTitle;
+                        }
+
+                        if (chartTypes.includes("bar")) {
+                            // Create a bar chart
+                            const barChartCtx = document.getElementById("bar-chart").getContext("2d");
+                            new Chart(barChartCtx, {
+                                type: "bar",
+                                data: result.barData, // Chart data from PHP
+                                options: {}
+                            });
+                            document.getElementById("bar-chart-container").innerText = result.barTitle;
+                        }
+
+                        if (chartTypes.includes("pie")) {
+                            // Create a pie chart
+                            const pieChartCtx = document.getElementById("pie-chart").getContext("2d");
+                            new Chart(pieChartCtx, {
+                                type: "pie",
+                                data: result.pieData, // Chart data from PHP
+                                options: {}
+                            });
+                            document.getElementById("pie-chart-container").innerText = result.pieTitle;
+                        }
+                    });
+            };
+            reader.readAsText(file);
         }
 
         // Function to handle file upload and selected chart types
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            const chartTypes = Array.from(document.querySelectorAll('input[name="chart-type"]:checked')).map(checkbox => checkbox.value);
+        function handleFileUpload(files) {
+            if (files.length > 0) {
+                // Select chart types
+                const selectedChartTypes = [];
+                const lineCheckbox = document.getElementById("line-chart");
+                const barCheckbox = document.getElementById("bar-chart");
+                const pieCheckbox = document.getElementById("pie-chart");
 
-            analyzeFile(file, chartTypes);
+                if (lineCheckbox.checked) {
+                    selectedChartTypes.push("line");
+                }
+                if (barCheckbox.checked) {
+                    selectedChartTypes.push("bar");
+                }
+                if (pieCheckbox.checked) {
+                    selectedChartTypes.push("pie");
+                }
+
+                analyzeFile(files[0], selectedChartTypes);
+            }
         }
-
-        const fileInput = document.getElementById("file-input");
-        fileInput.addEventListener("change", handleFileUpload);
     </script>
 </body>
 
