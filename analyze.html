@@ -4,25 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glassy and Dark Web Page</title>
+    <title>Shadowy and Classy Web Page</title>
     <style>
         body {
-            background: linear-gradient(to right, #1c1c1c, #000000);
+            background-color: #0d0d0d;
             color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         header {
-            background: rgba(255, 255, 255, 0.15);
+            background-color: #111111;
             padding: 20px;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
             font-size: 32px;
+            margin: 0;
         }
 
-        section {
-            margin: 40px;
+        main {
+            padding: 40px;
         }
 
         h2 {
@@ -32,118 +37,225 @@
 
         #chart-container {
             height: 400px;
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: #111111;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chart-label {
+            color: #ffffff;
         }
 
         /* Custom background styles */
         .color-1 {
-            background-color: #0a1b2f;
+            background-color: #2b5876;
         }
 
         .color-2 {
-            background-color: #2c5364;
+            background-color: #532e57;
         }
 
         .color-3 {
-            background-color: #203a43;
+            background-color: #613a52;
         }
 
         .color-4 {
-            background-color: #1e344a;
+            background-color: #004c6d;
+        }
+
+        /* File input styles */
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            background-color: #111111;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .file-input-label:hover {
+            background-color: #222222;
+        }
+
+        .file-input-text {
+            margin-right: 10px;
+        }
+
+        .file-input-text::after {
+            content: "Browse";
+        }
+
+        .file-input:hover + .file-input-label {
+            background-color: #222222;
+        }
+
+        .file-input:focus + .file-input-label {
+            outline: 1px solid #ffffff;
         }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Glassy and Dark Web Page</h1>
+        <h1>Shadowy and Classy Web Page</h1>
     </header>
     <main>
-        <section>
-            <h2>Data Analysis</h2>
-            <div id="chart-container"></div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                // Assuming you have included the Chart.js library
+        <h2>Data Analysis</h2>
+        <div id="chart-container"></div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Assuming you have included the Chart.js library
 
-                // Function to read and analyze the CSV/Excel file
-                function analyzeFile(file, chartTypes) {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        var contents = e.target.result;
+            // Function to read and analyze the CSV/Excel file
+            function analyzeFile(file, chartTypes) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var contents = e.target.result;
 
-                        // Pass the file contents to the Python script for analysis
-                        fetch('analysis.php', {
-                            method: 'POST',
-                            body: contents
-                        })
-                            .then(response => response.json())
-                            .then(result => {
-                                if (chartTypes.includes("line")) {
-                                    // Create a line chart
-                                    const lineChart = new Chart(document.getElementById("chart-container").getContext("2d"), {
-                                        type: "line",
-                                        data: result, // Chart data from PHP
-                                        options: {}
-                                    });
-                                }
+                    // Pass the file contents to the Python script for analysis
+                    fetch('analysis.php', {
+                        method: 'POST',
+                        body: contents
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (chartTypes.includes("line")) {
+                                // Create a line chart
+                                const lineChart = new Chart(document.getElementById("chart-container").getContext("2d"), {
+                                    type: "line",
+                                    data: result, // Chart data from PHP
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    color: "#ffffff",
+                                                    borderColor: "#ffffff",
+                                                    borderDash: [2, 4],
+                                                },
+                                                ticks: {
+                                                    color: "#ffffff"
+                                                }
+                                            },
+                                            x: {
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: "#ffffff"
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                labels: {
+                                                    color: "#ffffff"
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
 
-                                if (chartTypes.includes("bar")) {
-                                    // Create a bar chart
-                                    const barChart = new Chart(document.getElementById("chart-container").getContext("2d"), {
-                                        type: "bar",
-                                        data: result, // Chart data from PHP
-                                        options: {}
-                                    });
-                                }
+                            if (chartTypes.includes("bar")) {
+                                // Create a bar chart
+                                const barChart = new Chart(document.getElementById("chart-container").getContext("2d"), {
+                                    type: "bar",
+                                    data: result, // Chart data from PHP
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    color: "#ffffff",
+                                                    borderColor: "#ffffff",
+                                                    borderDash: [2, 4],
+                                                },
+                                                ticks: {
+                                                    color: "#ffffff"
+                                                }
+                                            },
+                                            x: {
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: "#ffffff"
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                labels: {
+                                                    color: "#ffffff"
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
 
-                                if (chartTypes.includes("pie")) {
-                                    // Create a pie chart
-                                    const pieChart = new Chart(document.getElementById("chart-container").getContext("2d"), {
-                                        type: "pie",
-                                        data: result, // Chart data from PHP
-                                        options: {}
-                                    });
-                                }
-                            });
-                    };
-                    reader.readAsText(file);
-                }
+                            if (chartTypes.includes("pie")) {
+                                // Create a pie chart
+                                const pieChart = new Chart(document.getElementById("chart-container").getContext("2d"), {
+                                    type: "pie",
+                                    data: result, // Chart data from PHP
+                                    options: {
+                                        plugins: {
+                                            legend: {
+                                                labels: {
+                                                    color: "#ffffff"
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                };
+                reader.readAsText(file);
+            }
 
-                // Function to handle file upload and selected chart types
-                function handleFileUpload(files) {
-                    if (files.length > 0) {
-                        // Select chart types
-                        const selectedChartTypes = [];
-                        const lineCheckbox = document.getElementById("line-chart");
-                        const barCheckbox = document.getElementById("bar-chart");
-                        const pieCheckbox = document.getElementById("pie-chart");
+            // Function to handle file upload and selected chart types
+            function handleFileUpload(files) {
+                if (files.length > 0) {
+                    // Select chart types
+                    const selectedChartTypes = [];
+                    const lineCheckbox = document.getElementById("line-chart");
+                    const barCheckbox = document.getElementById("bar-chart");
+                    const pieCheckbox = document.getElementById("pie-chart");
 
-                        if (lineCheckbox.checked) {
-                            selectedChartTypes.push("line");
-                        }
-                        if (barCheckbox.checked) {
-                            selectedChartTypes.push("bar");
-                        }
-                        if (pieCheckbox.checked) {
-                            selectedChartTypes.push("pie");
-                        }
-
-                        analyzeFile(files[0], selectedChartTypes);
+                    if (lineCheckbox.checked) {
+                        selectedChartTypes.push("line");
                     }
+                    if (barCheckbox.checked) {
+                        selectedChartTypes.push("bar");
+                    }
+                    if (pieCheckbox.checked) {
+                        selectedChartTypes.push("pie");
+                    }
+
+                    analyzeFile(files[0], selectedChartTypes);
                 }
-            </script>
-        </section>
+            }
+        </script>
     </main>
     <section>
         <h2>Select Data Presentations</h2>
         <input type="checkbox" id="line-chart" name="chart-type" value="line">
-        <label for="line-chart">Line Chart</label><br>
+        <label for="line-chart" class="chart-label">Line Chart</label><br>
         <input type="checkbox" id="bar-chart" name="chart-type" value="bar">
-        <label for="bar-chart">Bar Chart</label><br>
+        <label for="bar-chart" class="chart-label">Bar Chart</label><br>
         <input type="checkbox" id="pie-chart" name="chart-type" value="pie">
-        <label for="pie-chart">Pie Chart</label><br><br>
-        <input type="file" accept=".csv, .xlsx, .xls" onchange="handleFileUpload(this.files)">
+        <label for="pie-chart" class="chart-label">Pie Chart</label><br><br>
+        <input type="file" accept=".csv, .xlsx, .xls" class="file-input" onchange="handleFileUpload(this.files)">
+        <label for="file" class="file-input-label">
+            <span class="file-input-text">Browse</span>
+        </label>
     </section>
 </body>
 
