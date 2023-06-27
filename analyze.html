@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Funky and Colorful Web Page</title>
+    <title>Data Page</title>
     <style>
         body {
             background: linear-gradient(to right, #ff00cc, #3333ff);
@@ -12,43 +12,39 @@
             color: #ffffff;
             margin: 0;
             padding: 0;
-            height: 100vh;
+        }
+
+        .container {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            height: 100vh;
         }
 
-        h1 {
-            font-size: 48px;
-            margin-bottom: 40px;
+        .header {
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
         }
 
-        section {
+        .charts-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
             background-color: #ffffff;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 800px;
-            margin-bottom: 40px;
-        }
-
-        h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #333333;
-        }
-
-        .chart-container {
-            height: 400px;
-            margin-bottom: 40px;
+            margin: 20px;
+            width: 400px;
         }
 
         .chart-title {
-            font-size: 18px;
+            font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
             text-align: center;
@@ -60,6 +56,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            margin-bottom: 40px;
         }
 
         .file-input input[type="file"] {
@@ -78,29 +75,44 @@
 </head>
 
 <body>
-    <h1>Funky and Colorful Web Page</h1>
-    <section>
-        <h2>Data Analysis</h2>
-        <div class="chart-container">
-            <div id="line-chart-container" class="chart-title"></div>
-            <canvas id="line-chart"></canvas>
-        </div>
-        <div class="chart-container">
-            <div id="bar-chart-container" class="chart-title"></div>
-            <canvas id="bar-chart"></canvas>
-        </div>
-        <div class="chart-container">
-            <div id="pie-chart-container" class="chart-title"></div>
-            <canvas id="pie-chart"></canvas>
-        </div>
-    </section>
-    <section>
-        <div class="file-input">
+    <div class="container">
+        <header class="header">
+            <h1>Data Page</h1>
+        </header>
+
+        <section class="charts-section">
+            <div class="chart-container">
+                <div id="line-chart-container" class="chart-title"></div>
+                <canvas id="line-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div id="bar-chart-container" class="chart-title"></div>
+                <canvas id="bar-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div id="pie-chart-container" class="chart-title"></div>
+                <canvas id="pie-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div id="doughnut-chart-container" class="chart-title"></div>
+                <canvas id="doughnut-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div id="radar-chart-container" class="chart-title"></div>
+                <canvas id="radar-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div id="polar-area-chart-container" class="chart-title"></div>
+                <canvas id="polar-area-chart"></canvas>
+            </div>
+        </section>
+
+        <section class="file-input">
             <h2>Upload CSV/Excel File</h2>
             <label for="file">Choose File</label>
             <input type="file" id="file" accept=".csv, .xlsx, .xls" onchange="handleFileUpload(this.files)">
-        </div>
-    </section>
+        </section>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -119,37 +131,16 @@
                 })
                     .then(response => response.json())
                     .then(result => {
-                        if (chartTypes.includes("line")) {
-                            // Create a line chart
-                            const lineChartCtx = document.getElementById("line-chart").getContext("2d");
-                            new Chart(lineChartCtx, {
-                                type: "line",
-                                data: result.lineData, // Chart data from PHP
+                        for (let chartType of chartTypes) {
+                            // Create the respective chart based on the chart type
+                            const chartContainer = document.getElementById(`${chartType}-chart`);
+                            const chartCtx = chartContainer.getContext("2d");
+                            new Chart(chartCtx, {
+                                type: chartType,
+                                data: result[`${chartType}Data`], // Chart data from PHP
                                 options: {}
                             });
-                            document.getElementById("line-chart-container").innerText = result.lineTitle;
-                        }
-
-                        if (chartTypes.includes("bar")) {
-                            // Create a bar chart
-                            const barChartCtx = document.getElementById("bar-chart").getContext("2d");
-                            new Chart(barChartCtx, {
-                                type: "bar",
-                                data: result.barData, // Chart data from PHP
-                                options: {}
-                            });
-                            document.getElementById("bar-chart-container").innerText = result.barTitle;
-                        }
-
-                        if (chartTypes.includes("pie")) {
-                            // Create a pie chart
-                            const pieChartCtx = document.getElementById("pie-chart").getContext("2d");
-                            new Chart(pieChartCtx, {
-                                type: "pie",
-                                data: result.pieData, // Chart data from PHP
-                                options: {}
-                            });
-                            document.getElementById("pie-chart-container").innerText = result.pieTitle;
+                            document.getElementById(`${chartType}-chart-container`).innerText = result[`${chartType}Title`];
                         }
                     });
             };
@@ -161,19 +152,13 @@
             if (files.length > 0) {
                 // Select chart types
                 const selectedChartTypes = [];
-                const lineCheckbox = document.getElementById("line-chart");
-                const barCheckbox = document.getElementById("bar-chart");
-                const pieCheckbox = document.getElementById("pie-chart");
+                const checkboxes = document.querySelectorAll(".chart-checkbox");
 
-                if (lineCheckbox.checked) {
-                    selectedChartTypes.push("line");
-                }
-                if (barCheckbox.checked) {
-                    selectedChartTypes.push("bar");
-                }
-                if (pieCheckbox.checked) {
-                    selectedChartTypes.push("pie");
-                }
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedChartTypes.push(checkbox.value);
+                    }
+                });
 
                 analyzeFile(files[0], selectedChartTypes);
             }
