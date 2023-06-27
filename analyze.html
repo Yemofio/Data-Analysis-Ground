@@ -12,14 +12,10 @@
             color: #ffffff;
             margin: 0;
             padding: 0;
-        }
-
-        .container {
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
         }
 
         h1 {
@@ -82,31 +78,29 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Funky and Colorful Web Page</h1>
-        <section>
-            <h2>Data Analysis</h2>
-            <div class="chart-container">
-                <div id="line-chart-container" class="chart-title"></div>
-                <canvas id="line-chart"></canvas>
-            </div>
-            <div class="chart-container">
-                <div id="bar-chart-container" class="chart-title"></div>
-                <canvas id="bar-chart"></canvas>
-            </div>
-            <div class="chart-container">
-                <div id="pie-chart-container" class="chart-title"></div>
-                <canvas id="pie-chart"></canvas>
-            </div>
-        </section>
-        <section>
-            <div class="file-input">
-                <h2>Upload CSV/Excel File</h2>
-                <label for="file">Choose File</label>
-                <input type="file" id="file" accept=".csv, .xlsx, .xls" onchange="handleFileUpload(this.files)">
-            </div>
-        </section>
-    </div>
+    <h1>Funky and Colorful Web Page</h1>
+    <section>
+        <h2>Data Analysis</h2>
+        <div class="chart-container">
+            <div id="line-chart-container" class="chart-title"></div>
+            <canvas id="line-chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div id="bar-chart-container" class="chart-title"></div>
+            <canvas id="bar-chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div id="pie-chart-container" class="chart-title"></div>
+            <canvas id="pie-chart"></canvas>
+        </div>
+    </section>
+    <section>
+        <div class="file-input">
+            <h2>Upload CSV/Excel File</h2>
+            <label for="file">Choose File</label>
+            <input type="file" id="file" accept=".csv, .xlsx, .xls" onchange="handleFileUpload(this.files)">
+        </div>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
