@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the data into a pandas DataFrame
-df = pd.read_csv('data.csv')
+df = pd.read_csv('data_file.csv')
 
 # Remove duplicate rows
 df.drop_duplicates(inplace=True)
