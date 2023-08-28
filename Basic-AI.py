@@ -16,14 +16,14 @@ data = pd.read_csv('data.csv')
 # Drop rows with missing values
 data.dropna(inplace=True)
 
-# Convert date column to datetime format
+# Convert date column to DateTime format
 data['date'] = pd.to_datetime(data['date'])
 
-# Define a function to calculate average value by category
+# Define a function to calculate the average value by category
 def calculate_average_value_by_category(data, category_column, value_column):
     return data.groupby(category_column)[value_column].mean()
 
-# Define a function to calculate total value by category and date
+# Define a function to calculate the total value by category and date
 def calculate_total_value_by_category_and_date(data, category_column, date_column, value_column):
     return data.groupby([category_column, date_column])[value_column].sum().unstack()
 
